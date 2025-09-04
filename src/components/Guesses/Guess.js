@@ -3,7 +3,18 @@ import React from 'react';
 import { range } from '../../utils';
 import { checkGuess } from '../../game-helpers';
 
-function Guess({ guess, answer }) {
+function Guess({ guess, answer, onGuessResult }) {
+  const [results, setResults] = React.useState([]);
+
+  React.useEffect(() => {
+    if (guess) {
+      const results = checkGuess(guess.value, answer);
+      const isCorrect = results.every(({ status }) => status === 'correct');
+      onGuessResult(isCorrect);
+    }
+    setResults(guess ? checkGuess(guess.value, answer) : []);
+  }, [guess, answer, onGuessResult]);
+
   if (!guess) {
     return (
       <p className="guess">
@@ -15,8 +26,6 @@ function Guess({ guess, answer }) {
       </p>
     );
   }
-
-  const results = checkGuess(guess.value, answer);
 
   return (
     <p className="guess">
@@ -31,5 +40,4 @@ function Guess({ guess, answer }) {
     </p>
   );
 }
-
 export default Guess;
