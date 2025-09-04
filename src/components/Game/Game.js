@@ -31,7 +31,7 @@ function Game() {
         answer={answer}
         onGuessResult={handleOnGuessResult}
       />
-      <GuessInput onInput={handleOnInput} />
+      <GuessInput onInput={handleOnInput} isGameOver={isGameOver} />
       {isGameOver && isGuessCorrect && (
         <div className="happy banner">
           <p>
