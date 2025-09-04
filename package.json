@@ -37,5 +37,8 @@
     "tabWidth": 2,
     "arrowParens": "always",
     "endOfLine": "lf"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
