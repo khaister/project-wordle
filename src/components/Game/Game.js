@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { sample } from '../../utils';
+import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 import { WORDS } from '../../data';
+import { checkGuess } from '../../game-helpers';
+import { sample } from '../../utils';
 import GuessInput from '../GuessInput/GuessInput';
 import Guesses from '../Guesses/Guesses';
 
@@ -16,21 +18,19 @@ function Game() {
   const [isGuessCorrect, setIsGuessCorrect] = React.useState(false);
 
   const handleOnInput = (input) => {
-    setGuesses([...guesses, { value: input, id: crypto.randomUUID() }]);
-  };
-
-  const handleOnGuessResult = ({ isCorrect, isGameOver }) => {
-    setIsGuessCorrect(isCorrect);
-    setIsGameOver(isGameOver);
+    const result = checkGuess(input, answer);
+    setGuesses([...guesses, result]);
+    if (result.every(({ status }) => status === 'correct')) {
+      setIsGuessCorrect(true);
+      setIsGameOver(true);
+    } else if (guesses.length + 1 === NUM_OF_GUESSES_ALLOWED) {
+      setIsGameOver(true);
+    }
   };
 
   return (
     <>
-      <Guesses
-        guesses={guesses}
-        answer={answer}
-        onGuessResult={handleOnGuessResult}
-      />
+      <Guesses guesses={guesses} />
       <GuessInput onInput={handleOnInput} isGameOver={isGameOver} />
       {isGameOver && isGuessCorrect && (
         <div className="happy banner">

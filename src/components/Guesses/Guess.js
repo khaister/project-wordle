@@ -1,20 +1,6 @@
-import React from 'react';
-
 import { range } from '../../utils';
-import { checkGuess } from '../../game-helpers';
 
-function Guess({ guess, answer, onGuessResult }) {
-  const [results, setResults] = React.useState([]);
-
-  React.useEffect(() => {
-    if (guess) {
-      const results = checkGuess(guess.value, answer);
-      const isCorrect = results.every(({ status }) => status === 'correct');
-      onGuessResult(isCorrect);
-    }
-    setResults(guess ? checkGuess(guess.value, answer) : []);
-  }, [guess, answer, onGuessResult]);
-
+function Guess({ guess }) {
   if (!guess) {
     return (
       <p className="guess">
@@ -29,7 +15,7 @@ function Guess({ guess, answer, onGuessResult }) {
 
   return (
     <p className="guess">
-      {results.map(({ letter, status }, index) => {
+      {guess.map(({ letter, status }, index) => {
         const classes = `cell ${status}`;
         return (
           <span key={index} className={classes}>
