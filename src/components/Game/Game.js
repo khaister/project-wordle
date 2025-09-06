@@ -4,16 +4,13 @@ import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
 import { WORDS } from '../../data';
 import { checkGuess } from '../../game-helpers';
 import { sample } from '../../utils';
-import GuessInput from '../GuessInput/GuessInput';
-import Guesses from '../Guesses/Guesses';
-import Keyboard from '../Keyboard/Keyboard';
-
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
-// To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
+import GuessInput from '../GuessInput';
+import Guesses from '../Guesses';
+import Keyboard from '../Keyboard';
+import GameOverBanner from '../GameOverBanner';
 
 function Game() {
+  const [answer, setAnswer] = React.useState(() => sample(WORDS));
   const [guesses, setGuesses] = React.useState([]);
   const [isGameOver, setIsGameOver] = React.useState(false);
   const [isGuessCorrect, setIsGuessCorrect] = React.useState(false);
@@ -34,21 +31,18 @@ function Game() {
       <Guesses guesses={guesses} />
       <GuessInput onInput={handleOnInput} isGameOver={isGameOver} />
       <Keyboard guesses={guesses} />
-      {isGameOver && isGuessCorrect && (
-        <div className="happy banner">
-          <p>
-            <strong>Congratulations!</strong> Got it in{' '}
-            <strong>{guesses.length} guesses</strong>
-          </p>
-        </div>
-      )}
-      {isGameOver && !isGuessCorrect && (
-        <div className="sad banner">
-          <p>
-            Sorry, the correct answer is <strong>{answer}</strong>.
-          </p>
-        </div>
-      )}
+      <GameOverBanner
+        isGameOver={isGameOver}
+        isGuessCorrect={isGuessCorrect}
+        guesses={guesses}
+        answer={answer}
+        onReset={() => {
+          setGuesses([]);
+          setIsGameOver(false);
+          setIsGuessCorrect(false);
+          setAnswer(sample(WORDS));
+        }}
+      />
     </>
   );
 }
